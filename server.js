@@ -44,7 +44,17 @@ function createClient() {
     authStrategy: new LocalAuth({ clientId: 'whatsapp-saas' }),
     puppeteer: {
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']
+      executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || '/usr/bin/chromium',
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu',
+        '--no-first-run',
+        '--no-zygote',
+        '--single-process',
+        '--disable-extensions'
+      ]
     }
   });
 
@@ -291,7 +301,7 @@ io.on('connection', (socket) => {
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 server.listen(PORT, () => {
   console.log(`🚀 WhatsApp SaaS Backend running on http://localhost:${PORT}`);
   // Auto-initialize client to restore session
